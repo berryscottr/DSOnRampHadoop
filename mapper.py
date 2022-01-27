@@ -1,12 +1,9 @@
-#! /usr/bin/python
+#!/usr/bin/env python
 
-from sys import stdin
-import re
+import sys
 
-for line in stdin:
-    doc_id, content = line.split('\t')
-
-    words = re.findall(r'\w+', content)
-
+for line in sys.stdin:
+    line = line.strip()
+    words = line.split()
     for word in words:
-        print("%s\t%s:1" % (word.lower(), doc_id))
+        print('%s\t%s' % (word, 1))

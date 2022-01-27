@@ -1,25 +1,24 @@
-#! /usr/bin/python
+#!/usr/bin/env python
 
-from sys import stdin
-import re
+import sys
 
-index = {}
+current_word = None
+current_count = 0
+word = None
 
-for line in stdin:
-    word, postings = line.split('\t')
-
-    index.setdefault(word, {})
-
-    for posting in postings.split(','):
-        doc_id, count = posting.split(':')
+for line in sys.stdin:
+    line = line.strip()
+    word, count = line.split('\t', 1)
+    try:
         count = int(count)
-
-        index[word].setdefault(doc_id, 0)
-        index[word][doc_id] += count
-
-for word in index:
-    postings_list = ["%s:%d" % (doc_id, index[word][doc_id])
-                     for doc_id in index[word]]
-
-    postings = ','.join(postings_list)
-    print('%s\t%s' % (word, postings))
+    except ValueError:
+        continue
+    if current_word == word:
+        current_count += count
+    else:
+        if current_word:
+            print('%s\t%s' % (current_word, current_count))
+        current_count = count
+        current_word = word
+if current_word == word:
+    print('%s\t%s' % (current_word, current_count))
