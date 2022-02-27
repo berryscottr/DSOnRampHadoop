@@ -4,51 +4,95 @@ import sys
 
 
 def get_month(creation_date):
-    month = creation_date.split('-', 2)[1]
-    if month == 1:
+    month_int = int(creation_date.split('-', 2)[1])
+    if month_int == 1:
         month = "January"
-    elif month == 2:
+    elif month_int == 2:
         month = "February"
-    elif month == 3:
+    elif month_int == 3:
         month = "March"
-    elif month == 4:
+    elif month_int == 4:
         month = "April"
-    elif month == 5:
+    elif month_int == 5:
         month = "May"
-    elif month == 6:
+    elif month_int == 6:
         month = "June"
-    elif month == 7:
+    elif month_int == 7:
         month = "July"
-    elif month == 8:
+    elif month_int == 8:
         month = "August"
-    elif month == 9:
+    elif month_int == 9:
         month = "September"
-    elif month == 10:
+    elif month_int == 10:
         month = "October"
-    elif month == 11:
+    elif month_int == 11:
         month = "November"
-    elif month == 12:
+    elif month_int == 12:
         month = "December"
-    return month
+    return month_int, month
 
 
 def get_tags(tags):
     tag_list = [
-        x.replace('<', '', 1).replace('>', '', 1)
+        x.replace('<', '', 1).replace('>', '', 1).replace('\n', '', -1)
         for x in tags.split('><')
     ]
-    return tag_list
+    tag_list_cleaned = []
+    for tag in tag_list:
+        if tag != "-":
+            tag_list_cleaned.append(tag)
+    return tag_list_cleaned
 
 
-tag_data = {}
+tag_data = {
+    "January": {
+        "Tags": {}
+    },
+    "February": {
+        "Tags": {}
+    },
+    "March": {
+        "Tags": {}
+    },
+    "April": {
+        "Tags": {}
+    },
+    "May": {
+        "Tags": {}
+    },
+    "June": {
+        "Tags": {}
+    },
+    "July": {
+        "Tags": {}
+    },
+    "August": {
+        "Tags": {}
+    },
+    "September": {
+        "Tags": {}
+    },
+    "October": {
+        "Tags": {}
+    },
+    "November": {
+        "Tags": {}
+    },
+    "December": {
+        "Tags": {}
+    }
+}
 
 for line in sys.stdin:
     creation_date, tags = line.split('\t', 1)
-    month = get_month(creation_date)
+    month_int, month = get_month(creation_date)
     tag_list = get_tags(tags)
     for tag in tag_list:
-        tag_data[month][tag]["count"] += 1
+        if tag in tag_data[month]["Tags"]:
+            tag_data[month]["Tags"][tag] += 1
+        else:
+            tag_data[month]["Tags"][tag] = 1
 for month in tag_data:
-    print(month)
-    for tag in month:
-        print('{}\t{}'.format(tag, tag["count"]))
+    print('====={}====='.format(month))
+    for k, v in tag_data[month]["Tags"].items():
+        print('{}\t{}'.format(k, v))
