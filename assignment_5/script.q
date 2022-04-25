@@ -1,0 +1,1 @@
+FROM access.users t1 JOIN access.users2 t2 ON (t1.id = t2.id) SELECT t1.id, t1.name, t2.grad
